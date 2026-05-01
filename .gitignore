@@ -1,0 +1,23 @@
+# Built output
+/build
+app/build
+
+# Gradle build cache (gradle/wrapper/gradle-wrapper.jar must stay committed)
+/.gradle
+.gradle/
+
+# Android Studio / IntelliJ
+/.idea
+.idea/
+*.iml
+
+# Local machine config (contains SDK path — never commit)
+local.properties
+
+# Signing keys
+*.jks
+*.keystore
+
+# OS noise
+.DS_Store
+Thumbs.db
