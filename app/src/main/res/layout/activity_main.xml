@@ -59,7 +59,7 @@
                 android:paddingStart="12dp"
                 android:paddingEnd="8dp"
                 android:hint="Song name, artist or album…"
-                android:hintTextColor="#555555"
+                android:textColorHint="#555555"
                 android:textColor="#f0f0f0"
                 android:textSize="15sp"
                 android:singleLine="true"
