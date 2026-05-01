@@ -1,11 +1,12 @@
-name: Build APK
+name: Build & Release APK
 
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -27,12 +28,30 @@ jobs:
       - name: Grant execute permission to gradlew
         run: chmod +x gradlew
 
-      - name: Build debug APK
+      - name: Build 64-bit debug APK
         run: ./gradlew assembleDebug --stacktrace
 
-      - name: Upload APK artifact
-        uses: actions/upload-artifact@v4
+      - name: Rename APK
+        run: mv app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/MusicFetch-64bit.apk
+
+      - name: Delete existing latest release (if any)
+        run: gh release delete latest --yes || true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create GitHub Release and upload APK
+        uses: softprops/action-gh-release@v2
         with:
-          name: MusicFetch-debug-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
-          if-no-files-found: error
+          tag_name: latest
+          name: "MusicFetch - Latest Build"
+          body: |
+            **64-bit APK** — built automatically from the latest commit on `main`.
+
+            ### Install
+            1. Download `MusicFetch-64bit.apk` below
+            2. On your Android phone: Settings → Security → Allow unknown sources
+            3. Open the APK and tap Install
+
+            > Requires Android 8.0+ (API 26), arm64-v8a or x86_64 device
+          files: app/build/outputs/apk/debug/MusicFetch-64bit.apk
+          prerelease: false
